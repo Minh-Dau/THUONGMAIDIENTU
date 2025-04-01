@@ -1,0 +1,41 @@
+
+#main{
+    border: 2px rgb(247, 246, 246) solid;
+    width: 500px;
+}
+body{
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    align-items: center;
+}
+h2,p,h4{
+    font-size: 24px;
+   text-align: center;
+}
+.nhap{
+    font:inherit;
+    color: rgb(133, 132, 132);
+    padding: 10px;
+    width: 95%;
+    border-radius: 20px;
+    border-right: 20px;
+    margin-bottom: 10px;
+    outline-color: aliceblue;
+}
+.nhan{
+    width: 100%;
+    height: 40px;
+    border-radius: 10px;
+}
+a{
+    text-decoration: none;
+}
+.gg{
+    margin-left: 40px;
+    text-align: center;
+}
+.fb{
+    margin-left: 100px;
+}
+

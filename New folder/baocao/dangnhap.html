@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập</title>
+    <link rel="stylesheet" href="dangnhap.css">
+</head>
+<body>
+    <form id="main">
+        <div class="taikhoan">
+            <h2>ĐĂNG NHẬP TÀI KHOẢN TẠI ĐÂY</h2>
+            <p>Bạn chưa có tài khoản ?<a href="dangky.html">Đăng ký tại đây</a><p>
+            <div class="cha">
+                <input type="text" class="input-group_gmail" required id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$">
+                <label for="email" class="input-group_label_gmail"> Tài Khoản  <span>*</span> </label>
+            </div>
+          <div class="cha">
+              <input type="password" class="input-group_matkhau" required id="pass">
+                <label for="matkhau" class="input-group_label_matkhau">Mật khẩu <span>*</span></label>
+            <table class="hienthimatkhau">
+                <tr>
+                    <td>
+                        <input type="checkbox" id="check"> 
+                    </td>
+                    <td><p>Hiển thị mật khẩu</p></td>
+                </tr>   
+            </table>
+            <p>Quên mật khẩu? Nhấn vào <a href="quenmatkhau.html">đây</a></p>
+           <div class="cha">
+            <button class="click">Đăng Nhập</button>
+           </div>
+           <p class="haydangnhap">Hay đăng nhập bằng</p>
+           <img class="fb" width="129px" height="37px" alt="facebook-login-button" src="https://bizweb.dktcdn.net/assets/admin/images/login/fb-btn.svg">
+            <img class="gg" width="129px" height="37px" alt="google-login-button" src="https://bizweb.dktcdn.net/assets/admin/images/login/gp-btn.svg">
+        </div>
+        </div>
+    </form>
+</body>
+<script>
+    var pass=document.getElementById("pass");
+    var check=document.getElementById("check");
+    check.onchange=function(e){
+        pass.type=check.checked ? "text" : "password"
+    };
+</script>
+</html>

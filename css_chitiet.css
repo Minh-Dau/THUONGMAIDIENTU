@@ -1,0 +1,500 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+a{
+    color: rgb(0, 68, 255);
+    text-decoration: none;
+}
+.login i {
+    color: black; /* Đổi màu icon thành đen */
+    transition: color 0.3s ease;
+}
+
+.login:hover i {
+    color: #333; /* Khi hover sẽ tối hơn một chút */
+}
+.danhsach a{
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding-right: 10px;
+}
+.thea{
+    text-decoration: none;
+    color: rgb(65, 65, 65);
+    font-size: 20px;
+    margin-right: 40px;
+    margin-left: -15px;
+}
+.main{
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.thea:hover{
+    color:  black;
+}
+.thea > a {
+    color: inherit; /* Kế thừa màu chữ từ class cha */
+}
+.thecon a{
+    color: rgb(255, 255, 255);
+}
+.danhsach{
+    margin-left: -500px;
+}
+header{
+    background-color: rgb(255, 255, 255);
+    display: flex; /*Nằm cùng hàng*/
+    justify-content: space-between; /*Chia ảnh - Text - Button ra đều*/
+    align-content: center;
+    padding: 25px 5%;
+    text-decoration: none; /*Loại bỏ gạch chân*/ 
+}
+.main ul{
+    display: inline-flex; /*Cho các TEXT nằm cùng hàng*/
+    list-style: none; /*Bỏ các mục của list*/
+}
+.main ul li{
+    padding: 10px;
+}
+/*------------------------------------------------------------------*/
+/*------------------HIỆU ỨNG THẺ A*/
+.thea::after{
+    content: ''; /*Đặt chuỗi rỗng*/
+    width: 0; /*Độ dài thanh ngang ban đầu*/
+    height: 2px; /*Độ cao thanh ngang*/
+    background-color:  rgb(0, 0, 0);
+    border-radius: 45px;
+    margin: auto; /*Căn giữa chữ*/
+    display: block; /*Chiều ngang chiếm hết text*/
+    margin-right: 9px;
+}
+.thea:hover::after{
+    width: 90%; /*Khi đưa chuột vào đường ngang sẽ chạy đều với text*/
+    transition: all 0.3s ease 0s;
+}
+/*------------------------------------------------------------------*/
+/*------------------MỤC SHOP*/
+
+/*------------------------------------------------------------------*/
+.imgLogo {
+    display: block;
+    text-align: center;
+    width: 35%;
+    padding-top: 15px;
+    justify-content: center;
+    padding: 10px;
+}
+.shopping, .login {
+    display: inline-block;
+    font-size: 30px;
+    vertical-align: middle; /* Để căn giữa theo chiều dọc */
+    margin-right: 5px; /* Khoảng cách giữa chúng */
+}
+.container{
+    margin: auto;
+}
+.row{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.footer{
+    background-color: #ffffff;
+    padding: 50px;
+}
+.support{
+    font-size: 20px;
+    background-color: rgb(228, 228, 228);
+    padding: 30px;
+}
+.footer-col{
+    width: 20%;
+    padding:0 15px;
+}
+.footer-col h4{
+    font-size: 25px;
+    color: rgb(0, 0, 0);
+    text-transform: capitalize;
+    margin-bottom: 20px;
+}
+.footer-col ul li{
+    font-size: 18px;
+    color: rgb(0, 0, 0);
+    text-transform: capitalize;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 15px;
+}
+.footer p{
+    font-size: 18px;
+    color: rgb(0, 0, 0);
+    margin-bottom: 15px;
+}
+.banquyen{
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+}
+.contact{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    align-items: center;
+    padding: 10px;
+}
+.anh{
+    display: flex;
+    justify-content: center;
+    width: 350px;
+    height: 350px;
+    margin-right: 20px;
+}
+.noidung{
+    color: rgb(65,65,65);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 20px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 300px;
+    padding-right: 300px;
+    margin: auto;
+}
+.headline {
+    margin-top: 30px;
+    text-align: center; /* Center the text horizontally */
+    padding: 20px; /* Add some padding for better visual appearance */
+}
+.wrapper{
+    display: flex;
+    justify-content: center;
+}
+h3{
+    font-size: 50px;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    display: inline-block;
+    font-weight: 600;
+}
+.product{
+    flex-wrap: wrap;
+    display: flex;
+    list-style: none;
+    /* justify-content: space-between; */
+    /* margin-bottom: 50px;
+    margin-bottom: 50px;
+    margin-left: 400px;
+    margin-right: 300px; */
+    margin: 20px 0 20px 0;
+    width: 1280px;
+}
+.buy_now{
+    text-decoration: none;
+    background-color: #707070;
+    padding: 6px;
+    width: 80px;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.buy_now:hover{
+    background: rgb(0, 0, 0);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.product_item{
+    width: 300px;
+    height: 350px;
+    padding: 0 25px;
+    margin: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 10px;
+}
+.product_cat{
+    color: rgb(0, 0, 0);
+    padding: 3px 0px;
+    text-decoration: none;
+}
+.product_price{
+    font-weight: 600 ;
+    padding: 2px 0px;
+}
+.product_top{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.product_all a{
+    font-size: 15px;
+    padding: 10px 20px;
+    border: 0.5px solid #000000;
+    border-radius: 7px;
+    display: inline-block;
+    font-weight: 400;
+    text-decoration: none;
+    color: rgb(122, 122, 122);
+}
+.product_all{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+.product_all a:hover{
+    background-color: rgb(129, 129, 129);
+    color: white;
+    border: 0.5px solid rgb(129, 129, 129);
+    border-radius: 7px;
+}
+.img_main{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+}
+.headline2 {
+    margin-top: 30px;
+    text-align: center; /* Center the text horizontally */
+    padding: 20px; /* Add some padding for better visual appearance */
+}
+h6{
+    font-size: 50px;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.thumb_shop img{
+    display: flex;
+    width: 100%;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+.product_thumb img:hover{
+    filter: opacity(80%);
+}
+.welcome{
+    text-align: right;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 20px;
+    border-radius: 20px;
+    margin-right: 100px;
+}
+.welcome a{
+    color: rgb(187, 187, 187);
+    text-decoration: none;
+}
+.welcome a:hover{
+    color: rgb(0, 0, 0);
+    text-decoration:underline;
+}
+
+.welcome_user{
+    color: #000000;
+    font-weight: bold;
+    font-style: italic;
+}
+.quenmatkhau_form h1{
+    margin-bottom: 10px;
+}
+.quenmatkhau_form{
+    color: red;
+    text-align: center;
+    margin-bottom: 50px;
+    padding-top: 20px;
+}
+.quenmatkhau_form a{
+    font-size: 20px;
+    text-decoration: none;
+    color: rgb(177, 177, 177);
+}
+.quenmatkhau_form a:hover{
+    text-decoration:underline;
+    color: rgb(0, 0, 0);
+}
+/*phần giữa*/
+h1{
+    background-color: #e2e0e0;  
+}
+.sanpham{
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+}
+a{
+    text-decoration: none;
+}
+#gia{
+    color: rgb(0, 0, 0);
+    font-size: 30px;
+    font-weight: bold;
+}
+#thuonghieu{
+    font-size: 20px;
+}
+.kichthuoc {
+    display: none;
+}
+/* Chọn tất cả các nút radio */
+.kichthuoc + label {
+    display: inline-block;
+    width: 40px; /* Kích thước chiều rộng */
+    height: 40px; /* Kích thước chiều cao */
+    line-height: 40px; /* Để chữ nằm giữa */
+    text-align: center; /* Căn giữa chữ */
+    margin: 4px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+/* Khi nút radio được chọn, thay đổi kiểu dáng của label */
+.kichthuoc:checked + label {
+    border-color: #c5c4c4;
+    background-color: #c5c4c4;
+    color: #fff;
+}
+.soluong-container {
+    display: flex;
+    align-items: center;
+}
+#soluong{
+    border: 1px rgb(153, 151, 151) solid;
+    margin-right: 425px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+#giam{
+    background: #ffffff;
+    border: none;
+    cursor: pointer;
+    margin: 0;
+    width: 90px;
+    fill: rgb(0, 0, 0);   
+    width: 20px;
+    height: 20px;
+    margin-left: 3px;
+    font-size: 15px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+#tang{
+    background: #ffffff;
+    border: none;
+    cursor: pointer;
+    margin: 0;
+    width: 90px;
+    fill: rgb(0, 0, 0);   
+    width: 20px;
+    height: 20px;
+    font-size: 15px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+#so{
+    background: #ffffff;
+    border: none;
+    cursor: pointer;
+    margin: 0;
+    width: 70px;
+    margin-left: 0;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 15px;
+}
+.mua{
+    font-size: 15px;
+    margin-bottom: 10px;
+    width:25%;
+    height: 40px;
+    background-color: #000000;
+    color: white;
+    border-radius: 20px;
+}
+.mua:hover{
+    color: #ffffff;
+    background-color: #c5c4c4;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    border-color: #c5c4c4;
+    border-radius: 20px;
+}
+#mainsoluong{
+    display: flex;
+    align-items: center;
+}
+.tru:hover,.cong:hover{
+    background-color: #c5c4c4;
+}
+.sdt{
+    font-size:20px;
+    text-align: left;
+    margin-left: 80px;
+    font-style: italic;
+    margin-bottom: 5px;
+    color: #707070;
+}
+.mota{
+    text-align: center;
+    font-size: 30px;
+    text-decoration: none;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.motasanpham{
+    text-align: center;
+    font-size: 20px;
+    margin-top: 15px;
+    color: #4b4a4a;
+    margin-bottom: 10px;
+}
+.full-screen {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+.titel_chitiet{
+    font-size: 45px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.btn_muahang{
+    font-size: 20px;
+    padding: 10px 20px 10px;
+    cursor: pointer;
+    background-color: #707070;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: rgba(6, 42, 105, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+}
+.btn_muahang:hover{
+    background-color: #000000;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
+}
+
+.btn_giohang{
+    font-size: 20px;
+    padding: 10px 20px 10px;
+    cursor: pointer;
+    background-color: #707070;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: rgba(6, 42, 105, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+}
+.btn_giohang:hover{
+    background-color: #000000;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
+}

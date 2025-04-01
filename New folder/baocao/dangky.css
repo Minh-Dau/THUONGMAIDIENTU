@@ -1,0 +1,59 @@
+#main{
+    border: 0.5px rgb(231, 231, 231) solid;
+    width: 500px;
+}
+body{
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    align-items: center;
+}
+.cha{
+    margin-left: 15px;
+    margin-right: 15px;
+}
+h1,p{
+    text-align: center;
+    font-size: 24px;
+  
+}
+table{
+    align-items: center;
+}
+
+.nhap{
+  width: 98%;
+  height: 35px;
+  outline-color: rgb(179, 178, 180);
+  outline: -10px;
+  border: 1px rgb(233, 228, 228) solid;
+  border-radius: 5px;
+
+}
+h4{
+    margin-bottom: 2px;
+}
+span{
+    color: red;
+}
+a{
+    text-decoration: none;
+    color: blue;
+}
+.nhan{
+    width: 100%;
+    height: 30px;
+    outline-color: rgb(231, 240, 240);
+    transition: backgroup-color 200ms;
+    border-radius: 5px;
+
+}
+.nhan:hover{
+    background-color: rgb(216, 231, 231);
+}
+.fb{
+    margin-left: 110px;
+}
+.gg{
+    margin-left: 40px;
+}
