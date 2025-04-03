@@ -1,6 +1,54 @@
+
+<!-- Phần thông báo admin-->
 <?php
-include 'config.php'; // Kết nối với database
+include 'config.php';
+$new_review_count = 0;
+$notifications = [];
+$sql = "SELECT id, user_id, sanpham_id, created_at FROM danhgia WHERE is_seen = 0 ORDER BY created_at DESC";
+$result = $conn->query($sql);
+
+if ($result === false) {
+    // Kiểm tra lỗi truy vấn SQL
+    echo "Lỗi SQL: " . $conn->error;
+    exit;
+}
+if ($result->num_rows > 0) {
+    $new_review_count = $result->num_rows;
+    while ($row = $result->fetch_assoc()) {
+        $notifications[] = $row;
+    }
+}
+$conn->close();
 ?>
+<!-- Phần thông báo admin -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    let newReviewCount = <?php echo $new_review_count; ?>;
+    let notificationList = document.getElementById("notificationList");
+    let notificationCount = document.getElementById("notificationCount");
+
+    if (newReviewCount > 0) {
+        notificationCount.textContent = newReviewCount;
+        notificationCount.style.display = "inline"; // Hiển thị số lượng
+        notificationList.innerHTML = ""; // Xóa nội dung mặc định
+
+        let notifications = <?php echo json_encode($notifications); ?>;
+
+        notifications.forEach(function(notif) {
+            let item = document.createElement("li");
+            let link = document.createElement("a");
+            link.className = "dropdown-item";
+            link.href = "chitietsanpham.php?id=" + notif.sanpham_id + "&review_id=" + notif.id;
+            link.textContent = "Đánh giá mới từ User #" + notif.user_id + " về sản phẩm #" + notif.sanpham_id;
+            item.appendChild(link);
+            notificationList.appendChild(item);
+        });
+    } else {
+        notificationCount.style.display = "none"; // Ẩn số lượng khi không có thông báo
+        notificationList.innerHTML = '<li><a class="dropdown-item" href="#">Không có thông báo mới</a></li>';
+    }
+});
+</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,17 +71,30 @@ include 'config.php'; // Kết nối với database
         <!-- Navbar Search-->
         <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
         </form>
-        <!-- Navbar-->
         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="trangchinh.php">Trang Chính</a></li>
-                    <li><hr class="dropdown-divider" /></li>
-                    <li><a class="dropdown-item" href="logout.php">Đăng xuất</a></li>
-                </ul>
-            </li>
-        </ul>
+                <!-- Chuông thông báo -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bell fa-fw"></i>
+                        <span id="notificationCount" class="badge bg-danger position-absolute top-0 start-100 translate-middle">0</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown" id="notificationList">
+                        <li><a class="dropdown-item" href="#">Không có thông báo mới</a></li>
+                    </ul>
+                </li>
+
+                <!-- Icon User -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user fa-fw"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="trangchinh.php">Trang Chính</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="logout.php">Đăng xuất</a></li>
+                    </ul>
+                </li>
+            </ul>
     </nav>
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
@@ -108,7 +169,13 @@ include 'config.php'; // Kết nối với database
                                     <i class="fas fa-box"></i> 
                                 </div>
                                 QUẢN LÝ ĐƠN HÀNG
-                            </a>
+                        </a>
+                        <a class="nav-link" href="quanlydanhgia.php">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fas fa-star"></i> 
+                                </div>
+                                QUẢN LÝ ĐÁNH GIÁ
+                        </a>
                     </div>
                 </div>
             </nav>

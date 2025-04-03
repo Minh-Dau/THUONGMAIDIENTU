@@ -1,11 +1,8 @@
-
 <!-- Phần thông báo admin-->
 <?php
-include 'config.php'; // Kết nối với database
-
+include 'config.php';
 $new_review_count = 0;
 $notifications = [];
-
 $sql = "SELECT id, user_id, sanpham_id, created_at FROM danhgia WHERE is_seen = 0 ORDER BY created_at DESC";
 $result = $conn->query($sql);
 
@@ -14,17 +11,14 @@ if ($result === false) {
     echo "Lỗi SQL: " . $conn->error;
     exit;
 }
-
 if ($result->num_rows > 0) {
     $new_review_count = $result->num_rows;
     while ($row = $result->fetch_assoc()) {
         $notifications[] = $row;
     }
 }
-
 $conn->close();
 ?>
-
 <!-- Phần thông báo admin -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -175,6 +169,12 @@ $conn->close();
                                     <i class="fas fa-box"></i> 
                                 </div>
                                 QUẢN LÝ ĐƠN HÀNG
+                            </a>
+                            <a class="nav-link" href="quanlydanhgia.php">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fas fa-star"></i> 
+                                </div>
+                                QUẢN LÝ ĐÁNH GIÁ
                             </a>
                         </div>
                     </div>

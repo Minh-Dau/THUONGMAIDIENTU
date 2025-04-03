@@ -1,6 +1,53 @@
+<!-- Phần thông báo admin-->
 <?php
-include 'config.php'; // Kết nối với database
+include 'config.php';
+$new_review_count = 0;
+$notifications = [];
+$sql = "SELECT id, user_id, sanpham_id, created_at FROM danhgia WHERE is_seen = 0 ORDER BY created_at DESC";
+$result = $conn->query($sql);
+
+if ($result === false) {
+    // Kiểm tra lỗi truy vấn SQL
+    echo "Lỗi SQL: " . $conn->error;
+    exit;
+}
+if ($result->num_rows > 0) {
+    $new_review_count = $result->num_rows;
+    while ($row = $result->fetch_assoc()) {
+        $notifications[] = $row;
+    }
+}
+$conn->close();
 ?>
+<!-- Phần thông báo admin -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    let newReviewCount = <?php echo $new_review_count; ?>;
+    let notificationList = document.getElementById("notificationList");
+    let notificationCount = document.getElementById("notificationCount");
+
+    if (newReviewCount > 0) {
+        notificationCount.textContent = newReviewCount;
+        notificationCount.style.display = "inline"; // Hiển thị số lượng
+        notificationList.innerHTML = ""; // Xóa nội dung mặc định
+
+        let notifications = <?php echo json_encode($notifications); ?>;
+
+        notifications.forEach(function(notif) {
+            let item = document.createElement("li");
+            let link = document.createElement("a");
+            link.className = "dropdown-item";
+            link.href = "chitietsanpham.php?id=" + notif.sanpham_id + "&review_id=" + notif.id;
+            link.textContent = "Đánh giá mới từ User #" + notif.user_id + " về sản phẩm #" + notif.sanpham_id;
+            item.appendChild(link);
+            notificationList.appendChild(item);
+        });
+    } else {
+        notificationCount.style.display = "none"; // Ẩn số lượng khi không có thông báo
+        notificationList.innerHTML = '<li><a class="dropdown-item" href="#">Không có thông báo mới</a></li>';
+    }
+});
+</script>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -51,12 +98,26 @@ include 'config.php'; // Kết nối với database
             </form>
             <!-- Navbar-->
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                <!-- Chuông thông báo -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                    <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bell fa-fw"></i>
+                        <span id="notificationCount" class="badge bg-danger position-absolute top-0 start-100 translate-middle">0</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown" id="notificationList">
+                        <li><a class="dropdown-item" href="#">Không có thông báo mới</a></li>
+                    </ul>
+                </li>
+
+                <!-- Icon User -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user fa-fw"></i>
+                    </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="trangchinh.php">Trang Chính</a></li>
-                    <li><hr class="dropdown-divider" /></li>
-                    <li><a class="dropdown-item" href="logout.php">Đăng xuất</a></li>
+                        <li><a class="dropdown-item" href="trangchinh.php">Trang Chính</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="logout.php">Đăng xuất</a></li>
                     </ul>
                 </li>
             </ul>
@@ -134,6 +195,12 @@ include 'config.php'; // Kết nối với database
                                     <i class="fas fa-box"></i> 
                                 </div>
                                 QUẢN LÝ ĐƠN HÀNG
+                            </a>
+                            <a class="nav-link" href="quanlydanhgia.php">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fas fa-star"></i> 
+                                </div>
+                                QUẢN LÝ ĐÁNH GIÁ
                             </a>
                         </div>
                     </div>
@@ -215,6 +282,7 @@ include 'config.php'; // Kết nối với database
                                         }
                                         $stmt->close();
                                         $oder_details_json = json_encode($oder_details);
+
                                         echo "<tr>";
                                         echo "<td>" . $row["ngaydathang"] . "</td>";
                                         echo "<td>" . $row["payment_method"] . "</td>";
@@ -224,28 +292,27 @@ include 'config.php'; // Kết nối với database
                                         echo "<td>" . number_format($row["total"], 0, ',', '.') . " VND</td>"; // Tổng tiền di chuyển lên trước Hành động
                                         echo "<td>";
                                         echo "<button class='btn btn-info btn-sm view-btn'
-                                                    data-id='" . $row["id"] . "'
-                                                    data-user_id='" . $row["user_id"] . "'
-                                                    data-total='" . $row["total"] . "'
-                                                    data-ngaydathang='" . $row["ngaydathang"] . "'
-                                                    data-payment_method='" . $row["payment_method"] . "'
-                                                    data-trangthai='" . $row["trangthai"] . "'
-                                                    data-shipping_cost='" . $row["shipping_cost"] . "'
-                                                    data-payment_status='" . $row["payment_status"] . "'
-                                                    data-user_name='" . htmlspecialchars($row["user_name"], ENT_QUOTES, 'UTF-8') . "'
-                                                    data-user_email='" . htmlspecialchars($row["user_email"], ENT_QUOTES, 'UTF-8') . "'
-                                                    data-user_phone='" . htmlspecialchars($row["user_phone"], ENT_QUOTES, 'UTF-8') . "'
-                                                    data-user_address='" . htmlspecialchars($row["user_address"], ENT_QUOTES, 'UTF-8') . "'
-                                                    data-oder_details='" . htmlspecialchars($oder_details_json, ENT_QUOTES, 'UTF-8') . "'>
-                                                    Xem chi tiết
-                                                </button>";
-
+                                            data-id='" . $row["id"] . "'
+                                            data-user_id='" . $row["user_id"] . "'
+                                            data-total='" . $row["total"] . "'
+                                            data-ngaydathang='" . $row["ngaydathang"] . "'
+                                            data-payment_method='" . $row["payment_method"] . "'
+                                            data-trangthai='" . $row["trangthai"] . "'
+                                            data-shipping_cost='" . $row["shipping_cost"] . "'
+                                            data-payment_status='" . $row["payment_status"] . "'
+                                            data-user_name='" . htmlspecialchars($row["user_name"], ENT_QUOTES, 'UTF-8') . "'
+                                            data-user_email='" . htmlspecialchars($row["user_email"], ENT_QUOTES, 'UTF-8') . "'
+                                            data-user_phone='" . htmlspecialchars($row["user_phone"], ENT_QUOTES, 'UTF-8') . "'
+                                            data-user_address='" . htmlspecialchars($row["user_address"], ENT_QUOTES, 'UTF-8') . "'
+                                            data-oder_details='" . htmlspecialchars($oder_details_json, ENT_QUOTES, 'UTF-8') . "'>
+                                            Xem chi tiết
+                                        </button> ";
                                         // Xử lý nút "Xác nhận" dựa trên trạng thái
                                         $trangthai = $row["trangthai"];
                                         $buttonText = "";
                                         $buttonClass = "btn btn-warning btn-sm update-status-btn";
                                         $disabled = "";
-
+                            
                                         if ($trangthai == "Chờ xác nhận") {
                                             $buttonText = "Xác nhận";
                                         } elseif ($trangthai == "Đã xác nhận") {
@@ -254,13 +321,19 @@ include 'config.php'; // Kết nối với database
                                             $buttonText = "Đã giao";
                                         } elseif ($trangthai == "Đã giao") {
                                             $buttonText = "Đã giao";
-                                            $disabled = "disabled"; // Vô hiệu hóa nút khi trạng thái là "Đã giao"
+                                            $disabled = "disabled";
                                         }
-
                                         echo "<button class='$buttonClass' $disabled
-                                                    data-id='" . $row["id"] . "'
-                                                    data-trangthai='" . $trangthai . "'>
-                                                    $buttonText
+                                        data-id='" . $row["id"] . "'
+                                        data-trangthai='" . $trangthai . "'>
+                                        $buttonText
+                                    </button> ";
+                                        // Thêm nút "In Đơn" vào
+                                        $invoiceStatus = $row["invoice_status"]; // Lấy trạng thái "invoice_status"
+                                        echo "<button class='btn btn-secondary btn-sm' 
+                                                    id='printOrder' 
+                                                    data-invoice-status='" . htmlspecialchars($invoiceStatus) . "'>
+                                                    " . ($invoiceStatus === "Đã in" ? "Đã in" : "In Đơn") . "
                                                 </button>";
 
                                         echo "</td>";
@@ -342,22 +415,6 @@ include 'config.php'; // Kết nối với database
                                                 <tbody id="oderItemsTableBody">
                                                 </tbody>
                                             </table>
-                                            <?php
-                                                $conn = new mysqli("localhost", "root", "", "webbanhang");
-
-                                                $orderId = 75; // Thay bằng ID thực tế từ request hoặc session
-                                                $result = $conn->query("SELECT invoice_status FROM oder WHERE id = $orderId");
-
-                                                $row = $result->fetch_assoc();
-                                                $invoiceStatus = $row ? $row["invoice_status"] : "Chưa in";
-
-                                                $conn->close();
-                                                ?>
-
-                                                <!-- Gán trạng thái lấy từ database vào button -->
-                                                <button type="button" class="btn btn-secondary" id="printOrder" data-invoice-status="<?= $invoiceStatus ?>">
-                                                    <?= ($invoiceStatus === "Đã in") ? "Đã in" : "In Đơn" ?>
-                                                </button>
                                             <button type="button" class="btn btn-secondary" id="closeDetails">Đóng</button>
                                         </form>
                                     </div>
@@ -657,17 +714,20 @@ document.getElementById("editUserForm").addEventListener("submit", function(e) {
     });
 });
 </script>
-<!-- In hóa đỡ chỗ này-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    let printButton = document.getElementById("printOrder");
+    const printButton = document.getElementById("printOrder");
     let invoiceStatus = printButton.getAttribute("data-invoice-status");
 
-    // Kiểm tra trạng thái hóa đơn
+    // Initial button state
     if (invoiceStatus === "Đã in") {
-        printButton.disabled = true; // Vô hiệu hóa nút nếu đã in
+        printButton.textContent = "Đã in";
+        printButton.disabled = true;
+    } else {
+        printButton.textContent = "In Đơn";
+        printButton.disabled = false;
     }
 
     printButton.addEventListener("click", function () {
@@ -676,6 +736,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        // Get order details for PDF
         function maskPhoneNumber(phone) {
             return phone.slice(0, 5) + "*****";
         }
@@ -703,14 +764,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     table: {
                         widths: ["35%", "65%"],
                         body: [
-                            [{ text: "Tên khách hàng:", style: "boldText", fillColor: "#f3f3f3" }, userName],
-                            [{ text: "Email:", style: "boldText", fillColor: "#f3f3f3" }, email],
-                            [{ text: "Số điện thoại:", style: "boldText", fillColor: "#f3f3f3" }, phone],
-                            [{ text: "Địa chỉ giao hàng:", style: "boldText", fillColor: "#f3f3f3" }, address],
-                            [{ text: "Ngày đặt hàng:", style: "boldText", fillColor: "#f3f3f3" }, orderDate],
-                            [{ text: "Phương thức thanh toán:", style: "boldText", fillColor: "#f3f3f3" }, paymentMethod],
-                            [{ text: "Trạng thái đơn hàng:", style: "boldText", fillColor: "#f3f3f3" }, status],
-                            [{ text: "Trạng thái thanh toán:", style: "boldText", fillColor: "#f3f3f3" }, paymentStatus],
+                            [{ text: "Tên khách hàng:", style: "boldText" }, userName],
+                            [{ text: "Email:", style: "boldText" }, email],
+                            [{ text: "Số điện thoại:", style: "boldText" }, phone],
+                            [{ text: "Địa chỉ giao hàng:", style: "boldText" }, address],
+                            [{ text: "Ngày đặt hàng:", style: "boldText" }, orderDate],
+                            [{ text: "Phương thức thanh toán:", style: "boldText" }, paymentMethod],
+                            [{ text: "Trạng thái đơn hàng:", style: "boldText" }, status],
+                            [{ text: "Trạng thái thanh toán:", style: "boldText" }, paymentStatus],
                         ],
                     },
                     layout: "lightHorizontalLines",
@@ -723,34 +784,28 @@ document.addEventListener("DOMContentLoaded", function () {
                         widths: ["65%", "15%", "20%"],
                         body: [
                             [
-                                { text: "Sản phẩm", style: "tableHeader", alignment: "left" },
-                                { text: "Số lượng", style: "tableHeader", alignment: "center" },
-                                { text: "Đơn giá", style: "tableHeader", alignment: "center" },
+                                { text: "Sản phẩm", style: "tableHeader" },
+                                { text: "Số lượng", style: "tableHeader" },
+                                { text: "Đơn giá", style: "tableHeader" },
                             ],
                             ...Array.from(document.querySelectorAll("#oderItemsTableBody tr")).map(row => {
                                 let cells = Array.from(row.cells).slice(1);
-                                let productName = cells[0].textContent.trim();
-                                let quantity = cells[1].textContent.trim();
-                                let price = cells[2].textContent.trim();
                                 return [
-                                    { text: productName, alignment: "left" },
-                                    { text: quantity, alignment: "center" },
-                                    { text: price, alignment: "center" }
+                                    { text: cells[0].textContent.trim() },
+                                    { text: cells[1].textContent.trim(), alignment: "center" },
+                                    { text: cells[2].textContent.trim(), alignment: "right" }
                                 ];
                             }),
                         ],
                     },
-                    layout: "lightHorizontalLines",
                 },
                 {
                     table: {
                         widths: ["80%", "20%"],
-                        body: [
-                            [
-                                { text: "Tổng tiền:", style: "totalPrice", border: [false, false, false, false], margin: [0, 0, -5, 0] },
-                                { text: total, style: "totalPrice", border: [false, false, false, false] }
-                            ],
-                        ],
+                        body: [[
+                            { text: "Tổng tiền:", style: "totalPrice" },
+                            { text: total, style: "totalPrice", alignment: "right" }
+                        ]],
                     },
                     layout: "noBorders",
                     margin: [0, 5, 0, 0],
@@ -759,63 +814,42 @@ document.addEventListener("DOMContentLoaded", function () {
             styles: {
                 header: { fontSize: 22, bold: true, alignment: "center", margin: [0, 0, 0, 10], color: "#EE4D2D" },
                 subheader: { fontSize: 16, bold: true, margin: [0, 10, 0, 5] },
-                tableHeader: { bold: true, fillColor: "#f3f3f3", alignment: "center" },
+                tableHeader: { bold: true, fillColor: "#f3f3f3" },
                 boldText: { bold: true },
-                totalPrice: { fontSize: 14, bold: true, color: "red", alignment: "right" },
+                totalPrice: { fontSize: 14, bold: true, color: "red" },
             },
         };
 
+        // Generate and download PDF
         pdfMake.createPdf(docDefinition).download("HoaDon.pdf");
 
-        // Cập nhật trạng thái hóa đơn trong giao diện
-        printButton.setAttribute("data-invoice-status", "Đã in");
+        // Update status in UI
+        printButton.textContent = "Đã in";
         printButton.disabled = true;
+        invoiceStatus = "Đã in";
 
-        // Gửi yêu cầu cập nhật trạng thái hóa đơn lên server
-        let orderId = 75; // Thay bằng ID đơn hàng thực tế
+        // Get the order ID from the view button's data-id attribute
+        const viewButton = document.querySelector('.view-btn');
+        const orderId = viewButton.getAttribute('data-id');
+
+        // Update status in database
         fetch("updatehoadon.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id: orderId, invoice_status: "Đã in" }),
+            body: JSON.stringify({ 
+                id: orderId, 
+                invoice_status: "Đã in" 
+            }),
         })
         .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error("Lỗi:", error));
-    });
-});
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    let printButton = document.getElementById("printOrder");
-    let invoiceStatus = printButton.getAttribute("data-invoice-status");
-
-    if (invoiceStatus === "Đã in") {
-        printButton.textContent = "Đã in";
-        printButton.disabled = true;
-    } else {
-        printButton.textContent = "In Đơn";
-        printButton.disabled = false;
-    }
-
-    printButton.addEventListener("click", function () {
-        if (invoiceStatus === "Đã in") {
-            alert("Hóa đơn này đã được in!");
-            return;
-        }
-
-        alert("Bắt đầu tải file PDF...");
-
-        let docDefinition = {
-            content: [{ text: "HÓA ĐƠN MUA HÀNG", style: "header" }],
-            styles: {
-                header: { fontSize: 22, bold: true, alignment: "center", margin: [0, 0, 0, 10], color: "#EE4D2D" }
+        .then(data => {
+            if (data.success) {
+                console.log("Invoice status updated successfully");
+            } else {
+                console.error("Failed to update invoice status:", data.message);
             }
-        };
-
-        // Lưu file PDF
-        pdfMake.createPdf(docDefinition).download("HoaDon.pdf");
-
-        // ✅ Yêu cầu xác nhận sau khi tải       
+        })
+        .catch(error => console.error("Error:", error));
     });
 });
 </script>

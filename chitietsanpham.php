@@ -541,6 +541,8 @@ if (isset($_SESSION['username']) && isset($_POST['buy_now'])) {
     $da_mua = false;
     $orders = [];
     $is_admin_or_staff = false;
+
+    // Update the is_seen status for a specific review if review_id is provided
     if ($review_id > 0) {
         $sql_update_seen = "UPDATE danhgia SET is_seen = 1 WHERE id = ?";
         $stmt_update_seen = $conn->prepare($sql_update_seen);
@@ -548,6 +550,8 @@ if (isset($_SESSION['username']) && isset($_POST['buy_now'])) {
         $stmt_update_seen->execute();
         $stmt_update_seen->close();
     }
+
+    // Check if the user is an admin or staff
     if ($user_id > 0) {
         $sql_role = "SELECT phanquyen FROM frm_dangky WHERE id = ?";
         $stmt_role = $conn->prepare($sql_role);
@@ -562,6 +566,7 @@ if (isset($_SESSION['username']) && isset($_POST['buy_now'])) {
         }
     }
 
+    // Check if the user has purchased the product
     if ($user_id > 0 && $product_id > 0) {
         $sql_check = "SELECT oder.id FROM oder_detail 
                       INNER JOIN oder ON oder_detail.oder_id = oder.id
@@ -578,10 +583,11 @@ if (isset($_SESSION['username']) && isset($_POST['buy_now'])) {
         $stmt->close();
     }
 
+    // Display the review form or status for users who have purchased the product
     if ($user_id > 0 && $da_mua): ?>
-        <h4>Các đơn hàng của bạn:</h4>
         <?php foreach ($orders as $order_id): ?>
             <?php
+            // Check if a review exists for this user, product, and order
             $sql_check_review = "SELECT * FROM danhgia WHERE user_id = ? AND sanpham_id = ? AND oder_id = ?";
             $stmt_check = $conn->prepare($sql_check_review);
             $stmt_check->bind_param("iii", $user_id, $product_id, $order_id);
@@ -591,8 +597,36 @@ if (isset($_SESSION['username']) && isset($_POST['buy_now'])) {
             $stmt_check->close();
             ?>
 
-            <!--<h5>Đơn hàng ID: <?php echo $order_id; ?></h5>-->
-            <?php if (!$review): ?>
+            <?php if ($review): ?>
+                <?php if ($review['trangthaiduyet'] == 0): ?>
+                    <!-- Review exists but is not yet approved -->
+                    <p class="rv-waiting-approval">Bạn đã gửi đánh giá, vui lòng chờ admin duyệt đánh giá.</p>
+                <?php elseif ($review['trangthaiduyet'] == 1 && !$review['is_edited']): ?>
+                    <!-- Review is approved and can still be edited -->
+                    <form action="xulydanhgia.php" method="POST" class="rv-review-form">
+                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                        <input type="hidden" name="sanpham_id" value="<?php echo $product_id; ?>">
+                        <input type="hidden" name="oder_id" value="<?php echo $order_id; ?>">
+                        
+                        <label>Chọn đánh giá:</label>
+                        <select name="rating">
+                            <option value="5" <?php echo ($review['rating'] == 5) ? "selected" : ""; ?>>★★★★★</option>
+                            <option value="4" <?php echo ($review['rating'] == 4) ? "selected" : ""; ?>>★★★★</option>
+                            <option value="3" <?php echo ($review['rating'] == 3) ? "selected" : ""; ?>>★★★</option>
+                            <option value="2" <?php echo ($review['rating'] == 2) ? "selected" : ""; ?>>★★</option>
+                            <option value="1" <?php echo ($review['rating'] == 1) ? "selected" : ""; ?>>★</option>
+                        </select>
+                        
+                        <input type="text" name="comment" value="<?php echo htmlspecialchars($review['comment']); ?>">
+                        
+                        <button type="submit" name="update_review">Cập nhật đánh giá</button>
+                    </form>
+                <?php else: ?>
+                    <!-- Review is approved and has been edited, no further edits allowed -->
+                    <p>Bạn đã chỉnh sửa đánh giá cho đơn hàng này và không thể sửa lại.</p>
+                <?php endif; ?>
+            <?php else: ?>
+                <!-- No review exists, show the form to submit a new review -->
                 <form action="xulydanhgia.php" method="POST" class="rv-review-form">
                     <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
                     <input type="hidden" name="sanpham_id" value="<?php echo $product_id; ?>">
@@ -611,27 +645,6 @@ if (isset($_SESSION['username']) && isset($_POST['buy_now'])) {
                     
                     <button type="submit">Gửi đánh giá</button>
                 </form>
-            <?php elseif (!$review['is_edited']): ?>
-                <form action="xulydanhgia.php" method="POST" class="rv-review-form">
-                    <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-                    <input type="hidden" name="sanpham_id" value="<?php echo $product_id; ?>">
-                    <input type="hidden" name="oder_id" value="<?php echo $order_id; ?>">
-                    
-                    <label>Chọn đánh giá:</label>
-                    <select name="rating">
-                        <option value="5" <?php echo ($review['rating'] == 5) ? "selected" : ""; ?>>★★★★★</option>
-                        <option value="4" <?php echo ($review['rating'] == 4) ? "selected" : ""; ?>>★★★★</option>
-                        <option value="3" <?php echo ($review['rating'] == 3) ? "selected" : ""; ?>>★★★</option>
-                        <option value="2" <?php echo ($review['rating'] == 2) ? "selected" : ""; ?>>★★</option>
-                        <option value="1" <?php echo ($review['rating'] == 1) ? "selected" : ""; ?>>★</option>
-                    </select>
-                    
-                    <input type="text" name="comment" value="<?php echo htmlspecialchars($review['comment']); ?>">
-                    
-                    <button type="submit" name="update_review">Cập nhật đánh giá</button>
-                </form>
-            <?php else: ?>
-                <p>Bạn đã chỉnh sửa đánh giá cho đơn hàng này và không thể sửa lại.</p>
             <?php endif; ?>
         <?php endforeach; ?>
     <?php else: ?>
@@ -639,13 +652,14 @@ if (isset($_SESSION['username']) && isset($_POST['buy_now'])) {
     <?php endif; ?>
 
     <?php
-    $sql_avg_rating = "SELECT AVG(rating) as avg_rating FROM danhgia WHERE sanpham_id = ?";
+    // Calculate the average rating, considering only approved reviews
+    $sql_avg_rating = "SELECT AVG(rating) as avg_rating FROM danhgia WHERE sanpham_id = ? AND trangthaiduyet = 1";
     $stmt_avg = $conn->prepare($sql_avg_rating);
     $stmt_avg->bind_param("i", $product_id);
     $stmt_avg->execute();
     $result_avg = $stmt_avg->get_result();
     $row_avg = $result_avg->fetch_assoc();
-    $avg_rating = round($row_avg['avg_rating'], 1);
+    $avg_rating = round($row_avg['avg_rating'] ?? 0, 1); // Default to 0 if no approved reviews
     $stmt_avg->close();
 
     function renderStars($rating) {
@@ -674,11 +688,12 @@ if (isset($_SESSION['username']) && isset($_POST['buy_now'])) {
     <div class="rv-review-list">
         <h3>Đánh giá từ người mua</h3>
         <?php
+        // Fetch only approved reviews for display
         $sql_reviews = "SELECT danhgia.*, frm_dangky.username, frm_dangky.hoten AS user_name, admin_user.hoten AS admin_name 
                         FROM danhgia 
                         JOIN frm_dangky ON danhgia.user_id = frm_dangky.id
                         LEFT JOIN frm_dangky AS admin_user ON danhgia.admin_id = admin_user.id
-                        WHERE danhgia.sanpham_id = ? 
+                        WHERE danhgia.sanpham_id = ? AND danhgia.trangthaiduyet = 1
                         ORDER BY danhgia.created_at DESC";
         $stmt_reviews = $conn->prepare($sql_reviews);
         $stmt_reviews->bind_param("i", $product_id);
@@ -688,7 +703,7 @@ if (isset($_SESSION['username']) && isset($_POST['buy_now'])) {
         if ($result_reviews->num_rows > 0) {
             while ($review = $result_reviews->fetch_assoc()) {
                 echo '<div class="rv-review-item">';
-                echo '<p><strong>' . htmlspecialchars($review['user_name']) . '</strong> - <span class="rv-rating">' . $review['rating'] . '★</p>';
+                echo '<p><strong>' . htmlspecialchars($review['user_name']) . '</strong> - <span class="rv-rating">' . $review['rating'] . '★</span></p>';
                 echo '<p>' . htmlspecialchars($review['comment']) . '</p>';
 
                 // Hiển thị phản hồi từ admin/nhân viên nếu có
@@ -718,7 +733,6 @@ if (isset($_SESSION['username']) && isset($_POST['buy_now'])) {
     </div>
 </div>
     <!-- Sản phẩm cùng danh mục -->
-    <h3>Sản phẩm liên quan</h3>
     <div class="wrapper">
         <div class="product" id="related-products">
             <?php

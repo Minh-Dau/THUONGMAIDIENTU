@@ -1,24 +1,32 @@
 <?php
+include 'config.php'; // Include your database connection
+
 header('Content-Type: application/json');
 
-$data = json_decode(file_get_contents("php://input"), true);
-if (isset($data['id']) && isset($data['invoice_status'])) {
-    $conn = new mysqli("localhost", "root", "", "webbanhang");
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = json_decode(file_get_contents('php://input'), true);
 
-    if ($conn->connect_error) {
-        echo json_encode(["status" => "error", "message" => "Lỗi kết nối database"]);
-        exit();
-    }
+    if (isset($data['id']) && isset($data['invoice_status'])) {
+        $order_id = intval($data['id']);
+        $invoice_status = $data['invoice_status'];
 
-    $orderId = (int)$data['id'];
-    $sql = "UPDATE oder SET invoice_status = 'Đã in' WHERE id = $orderId";
+        // Note: Your table name in the HTML is "oder" not "orders"
+        $stmt = $conn->prepare("UPDATE oder SET invoice_status = ? WHERE id = ?");
+        $stmt->bind_param("si", $invoice_status, $order_id);
 
-    if ($conn->query($sql) === TRUE) {
-        echo json_encode(["status" => "success"]);
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true, 'message' => 'Invoice status updated successfully']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to update invoice status: ' . $conn->error]);
+        }
+
+        $stmt->close();
     } else {
-        echo json_encode(["status" => "error", "message" => "Cập nhật thất bại"]);
+        echo json_encode(['success' => false, 'message' => 'Invalid request data']);
     }
-
-    $conn->close();
+} else {
+    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 }
+
+$conn->close();
 ?>
