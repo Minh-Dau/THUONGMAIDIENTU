@@ -246,23 +246,29 @@ $conn->close();
                                                 ? "<span style='color: green; font-size: 20px;'>●</span> Hoạt Động" 
                                                 : "<span style='color: red; font-size: 20px;'>●</span> Bị Khóa") . "</td>";
                                             echo "<td>
-                                                    <button class='btn btn-warning btn-sm edit-btn'
-                                                        data-id='" . $row["id"] . "'
-                                                        data-username='" . htmlspecialchars($row["username"]) . "'
-                                                        data-email='" . htmlspecialchars($row["email"]) . "'
-                                                        data-sdt='" . htmlspecialchars($row["sdt"] ?? '') . "'
-                                                        data-diachi='" . htmlspecialchars($row["diachi"] ?? '') . "'
-                                                        data-phanquyen='" . htmlspecialchars($row["phanquyen"]) . "'
-                                                        data-anh='" . htmlspecialchars($row["anh"] ?? '') . "'
-                                                        data-trangthai='" . htmlspecialchars($row["trangthai"]) . "'
-                                                        data-bs-toggle='modal'
-                                                        data-bs-target='#editUserModal'>
-                                                        Sửa
-                                                    </button>
-                                                    <button class='btn btn-danger btn-sm delete-btn' data-id='" . $row["id"] . "'>
-                                                        Xóa
-                                                    </button>
-                                                </td>";
+                                                <button class='btn btn-warning btn-sm edit-btn'
+                                                    data-id='" . $row["id"] . "'
+                                                    data-username='" . htmlspecialchars($row["username"]) . "'
+                                                    data-email='" . htmlspecialchars($row["email"]) . "'
+                                                    data-sdt='" . htmlspecialchars($row["sdt"] ?? '') . "'
+                                                    data-diachi='" . htmlspecialchars($row["diachi"] ?? '') . "'
+                                                    data-phanquyen='" . htmlspecialchars($row["phanquyen"]) . "'
+                                                    data-anh='" . htmlspecialchars($row["anh"] ?? '') . "'
+                                                    data-trangthai='" . htmlspecialchars($row["trangthai"]) . "'
+                                                    data-bs-toggle='modal'
+                                                    data-bs-target='#editUserModal'>
+                                                    Sửa
+                                                </button>
+                                                <button class='btn btn-info btn-sm permission-btn'
+                                                    data-id='" . $row["id"] . "'
+                                                    data-bs-toggle='modal'
+                                                    data-bs-target='#permissionModal'>
+                                                    Quyền
+                                                </button>
+                                                <button class='btn btn-danger btn-sm delete-btn' data-id='" . $row["id"] . "'>
+                                                    Xóa
+                                                </button>
+                                            </td>";
                                             echo "</tr>";
                                         }
                                     } else {

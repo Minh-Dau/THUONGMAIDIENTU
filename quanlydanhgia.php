@@ -197,6 +197,12 @@ $conn->close();
                                 </div>
                                 QUẢN LÝ ĐƠN HÀNG
                             </a>
+                            <a class="nav-link" href="quanlydanhgia.php">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fas fa-star"></i> 
+                                </div>
+                                QUẢN LÝ ĐÁNH GIÁ
+                            </a>
                         </div>
                     </div>
                 </nav>

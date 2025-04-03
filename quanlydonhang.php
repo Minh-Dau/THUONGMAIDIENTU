@@ -282,7 +282,6 @@ $conn->close();
                                         }
                                         $stmt->close();
                                         $oder_details_json = json_encode($oder_details);
-
                                         echo "<tr>";
                                         echo "<td>" . $row["ngaydathang"] . "</td>";
                                         echo "<td>" . $row["payment_method"] . "</td>";
@@ -328,8 +327,7 @@ $conn->close();
                                         data-trangthai='" . $trangthai . "'>
                                         $buttonText
                                     </button> ";
-                                        // Thêm nút "In Đơn" vào
-                                        $invoiceStatus = $row["invoice_status"]; // Lấy trạng thái "invoice_status"
+                                        $invoiceStatus = $row["invoice_status"]; 
                                         echo "<button class='btn btn-secondary btn-sm' 
                                                     id='printOrder' 
                                                     data-invoice-status='" . htmlspecialchars($invoiceStatus) . "'>
@@ -346,7 +344,6 @@ $conn->close();
                                 ?>
                             </tbody>
                         </table>
-                            <!-- Section to display oder details -->
                             <div id="oderDetailsSection" class="mt-4" style="display: none;">
                                 <div class="card">
                                     <div class="card-header">
