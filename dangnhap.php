@@ -18,18 +18,26 @@ $error_message2 = "";
 $error_message3 = "";
 
 // Nếu đã đăng nhập, chuyển hướng về trang chính
-if (isset($_SESSION['username'])) {
-    header("Location: trangchinh.php");
+if (isset($_SESSION['username']) && isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+    header('Location: trangchinh.php');
     exit();
 }
+
+// Trong login.php, sau khi đăng nhập thành công
+
+// Kiểm tra khi nhấn nút đăng nhập
 if (isset($_POST['dangnhap']) && !empty($_POST['username']) && !empty($_POST['password'])) {
     $taikhoan = $_POST['username'];
     $password = $_POST['password'];
+
+    // Truy vấn lấy thông tin tài khoản từ CSDL
     $sql = "SELECT * FROM frm_dangky WHERE username=? LIMIT 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $taikhoan);
     $stmt->execute();
     $result = $stmt->get_result();
+
+    // Kiểm tra tài khoản có tồn tại không
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         if ($user['trangthai'] == "đã khóa") { 
@@ -53,7 +61,6 @@ if (isset($_POST['dangnhap']) && !empty($_POST['username']) && !empty($_POST['pa
     } else {
         $error_message2 = "Tài khoản không tồn tại!";
     }
-
     $stmt->close();
 }
 $conn->close();
