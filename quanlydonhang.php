@@ -202,6 +202,18 @@ $conn->close();
                                 </div>
                                 QUẢN LÝ ĐÁNH GIÁ
                             </a>
+                            <a class="nav-link" href="quanly_vanchuyen.php">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fas fa-truck"></i>  
+                                </div>
+                                QUẢN LÝ VẬN CHUYỂN 
+                            </a>
+                            <a class="nav-link" href="quanly_khuyenmai.php">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fas fa-tags"></i>  
+                                </div>
+                                QUẢN LÝ KHUYẾN MÃI 
+                            </a>
                         </div>
                     </div>
                 </nav>
